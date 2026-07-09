@@ -1,0 +1,2235 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>StaffHub Marketing Command Center</title>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.468.0/dist/umd/lucide.min.js"></script>
+  <style>
+    :root {
+      --page: #f5f7fb;
+      --surface: #ffffff;
+      --surface-soft: #eef4f7;
+      --ink: #172033;
+      --muted: #687385;
+      --border: #d8e0ea;
+      --sidebar: #102023;
+      --sidebar-2: #183238;
+      --teal: #177e89;
+      --teal-soft: #dff3f5;
+      --coral: #c94f65;
+      --coral-soft: #f8e5e8;
+      --gold: #b87713;
+      --gold-soft: #fbefd8;
+      --indigo: #4f63b6;
+      --indigo-soft: #e8ebfb;
+      --green: #2f855a;
+      --green-soft: #def4e8;
+      --red: #b42318;
+      --shadow: 0 18px 40px rgba(23, 32, 51, 0.08);
+      --radius: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        linear-gradient(180deg, rgba(23, 126, 137, 0.08), rgba(23, 126, 137, 0) 320px),
+        var(--page);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      letter-spacing: 0;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      border: 0;
+    }
+
+    .app-shell {
+      display: grid;
+      grid-template-columns: 286px minmax(0, 1fr);
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+      background: var(--sidebar);
+      color: #f4fbfb;
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-mark {
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius);
+      background: linear-gradient(135deg, var(--teal), var(--coral));
+      display: grid;
+      place-items: center;
+      color: #ffffff;
+      font-weight: 900;
+      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.24);
+    }
+
+    .eyebrow {
+      color: #8cced2;
+      font-size: 0.74rem;
+      font-weight: 800;
+      margin: 0 0 3px;
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      font-size: 1.22rem;
+      line-height: 1.1;
+      margin-bottom: 0;
+    }
+
+    .sidebar-copy {
+      color: #b8c8c9;
+      font-size: 0.88rem;
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    .nav-tabs {
+      display: grid;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .nav-tab,
+    .ghost-button,
+    .primary-button,
+    .danger-button,
+    .icon-button {
+      min-height: 42px;
+      border-radius: var(--radius);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: transform 0.16s ease, background 0.16s ease, border-color 0.16s ease, color 0.16s ease;
+      white-space: nowrap;
+    }
+
+    .nav-tab {
+      background: transparent;
+      color: #d8eeee;
+      border: 1px solid rgba(216, 238, 238, 0.16);
+      justify-content: flex-start;
+      padding: 0 12px;
+      width: 100%;
+    }
+
+    .nav-tab:hover,
+    .nav-tab.active {
+      background: var(--sidebar-2);
+      border-color: rgba(140, 206, 210, 0.5);
+      color: #ffffff;
+    }
+
+    .side-panel {
+      border: 1px solid rgba(216, 238, 238, 0.14);
+      border-radius: var(--radius);
+      padding: 14px;
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .field-label {
+      display: block;
+      color: inherit;
+      font-size: 0.78rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+
+    .sidebar select,
+    .sidebar input {
+      background: #0b191c;
+      color: #ffffff;
+      border-color: rgba(216, 238, 238, 0.18);
+      font-size: 0.9rem;
+    }
+
+    .progress-track {
+      height: 10px;
+      width: 100%;
+      overflow: hidden;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--teal), var(--gold));
+      width: 0;
+      transition: width 0.25s ease;
+    }
+
+    .mini-stats {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .mini-stat {
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.07);
+      padding: 10px;
+      min-width: 0;
+    }
+
+    .mini-stat span {
+      display: block;
+      color: #9dc7ca;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+
+    .mini-stat strong {
+      display: block;
+      color: #ffffff;
+      font-size: 1.1rem;
+      margin-top: 4px;
+    }
+
+    .main {
+      min-width: 0;
+      padding: 24px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    .topbar > div:first-child {
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+
+    .topbar h2 {
+      font-size: 1.76rem;
+      line-height: 1.15;
+      margin-bottom: 6px;
+    }
+
+    .topbar p {
+      color: var(--muted);
+      line-height: 1.5;
+      margin-bottom: 0;
+      max-width: 820px;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      flex: 0 0 auto;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .primary-button {
+      background: var(--teal);
+      color: #ffffff;
+      padding: 0 14px;
+      font-weight: 800;
+    }
+
+    .primary-button:hover {
+      background: #126973;
+      transform: translateY(-1px);
+    }
+
+    .ghost-button,
+    .icon-button {
+      background: var(--surface);
+      color: var(--ink);
+      border: 1px solid var(--border);
+      padding: 0 12px;
+      font-weight: 750;
+    }
+
+    .ghost-button:hover,
+    .icon-button:hover {
+      border-color: #aebccc;
+      transform: translateY(-1px);
+    }
+
+    .danger-button {
+      background: #fff4f2;
+      color: var(--red);
+      border: 1px solid #ffd1ca;
+      padding: 0 12px;
+      font-weight: 800;
+    }
+
+    .icon-button {
+      width: 42px;
+      padding: 0;
+      flex: 0 0 auto;
+    }
+
+    [data-lucide] {
+      width: 17px;
+      height: 17px;
+      stroke-width: 2.2;
+      flex: 0 0 auto;
+    }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .kpi {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: var(--shadow);
+      min-width: 0;
+    }
+
+    .kpi-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 0.8rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+
+    .kpi-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: var(--radius);
+      display: grid;
+      place-items: center;
+    }
+
+    .kpi-icon.teal {
+      background: var(--teal-soft);
+      color: var(--teal);
+    }
+
+    .kpi-icon.coral {
+      background: var(--coral-soft);
+      color: var(--coral);
+    }
+
+    .kpi-icon.gold {
+      background: var(--gold-soft);
+      color: var(--gold);
+    }
+
+    .kpi-icon.indigo {
+      background: var(--indigo-soft);
+      color: var(--indigo);
+    }
+
+    .kpi-value {
+      font-size: 1.75rem;
+      line-height: 1;
+      font-weight: 900;
+      margin-top: 18px;
+      overflow-wrap: anywhere;
+    }
+
+    .kpi-foot {
+      color: var(--muted);
+      font-size: 0.82rem;
+      margin: 8px 0 0;
+      line-height: 1.4;
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 342px;
+      align-items: start;
+      gap: 16px;
+    }
+
+    .work-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      min-width: 0;
+    }
+
+    .view-section {
+      display: none;
+    }
+
+    .view-section.active {
+      display: block;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 18px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-header h3 {
+      font-size: 1.05rem;
+      margin-bottom: 4px;
+    }
+
+    .section-header p {
+      color: var(--muted);
+      font-size: 0.86rem;
+      margin-bottom: 0;
+      line-height: 1.45;
+    }
+
+    .panel-body {
+      padding: 18px;
+    }
+
+    .task-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .task-row {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: start;
+      padding: 13px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: #ffffff;
+    }
+
+    .task-row.done {
+      background: #f7faf9;
+      border-color: #b8ddc8;
+    }
+
+    .task-row.done .task-title,
+    .task-row.done .task-desc,
+    .task-row.done .task-meta {
+      opacity: 0.58;
+    }
+
+    .task-check {
+      width: 20px;
+      height: 20px;
+      margin-top: 2px;
+      accent-color: var(--green);
+    }
+
+    .task-title {
+      font-weight: 850;
+      line-height: 1.25;
+      margin: 0;
+      overflow-wrap: anywhere;
+    }
+
+    .task-desc {
+      color: var(--muted);
+      font-size: 0.86rem;
+      line-height: 1.45;
+      margin: 5px 0 0;
+      overflow-wrap: anywhere;
+    }
+
+    .task-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 9px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 24px;
+      border-radius: 999px;
+      padding: 0 9px;
+      font-size: 0.72rem;
+      font-weight: 850;
+      color: var(--ink);
+      background: var(--surface-soft);
+      white-space: nowrap;
+    }
+
+    .badge.channel-ads {
+      background: var(--indigo-soft);
+      color: #334699;
+    }
+
+    .badge.channel-content,
+    .badge.channel-social {
+      background: var(--coral-soft);
+      color: #9d3348;
+    }
+
+    .badge.channel-email,
+    .badge.channel-crm {
+      background: var(--green-soft);
+      color: #276749;
+    }
+
+    .badge.channel-seo,
+    .badge.channel-google {
+      background: var(--teal-soft);
+      color: #126973;
+    }
+
+    .badge.channel-strategy,
+    .badge.channel-ops {
+      background: var(--gold-soft);
+      color: #8a570d;
+    }
+
+    .badge.priority-high {
+      background: #ffe5df;
+      color: var(--red);
+    }
+
+    .badge.priority-medium {
+      background: var(--gold-soft);
+      color: #8a570d;
+    }
+
+    .badge.priority-low {
+      background: #edf2f7;
+      color: #4a5568;
+    }
+
+    .task-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .task-form,
+    .metric-form,
+    .campaign-form,
+    .idea-form {
+      display: grid;
+      gap: 10px;
+    }
+
+    .task-form {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+      grid-template-columns: 1.2fr 0.8fr 0.8fr auto;
+      align-items: end;
+    }
+
+    .form-field {
+      display: grid;
+      gap: 6px;
+      min-width: 0;
+    }
+
+    .form-field span {
+      color: var(--muted);
+      font-size: 0.76rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      min-height: 42px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: #ffffff;
+      color: var(--ink);
+      padding: 9px 11px;
+      outline: none;
+    }
+
+    textarea {
+      min-height: 92px;
+      resize: vertical;
+      line-height: 1.45;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--teal);
+      box-shadow: 0 0 0 3px rgba(23, 126, 137, 0.16);
+    }
+
+    .week-planner {
+      display: grid;
+      gap: 12px;
+    }
+
+    .day-block {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: #ffffff;
+    }
+
+    .day-head {
+      display: grid;
+      grid-template-columns: 150px minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: center;
+      background: #f8fbfc;
+      border-bottom: 1px solid var(--border);
+      padding: 12px;
+    }
+
+    .day-name {
+      font-weight: 900;
+      line-height: 1.2;
+    }
+
+    .day-date {
+      color: var(--muted);
+      font-size: 0.84rem;
+      margin-top: 3px;
+    }
+
+    .day-focus {
+      color: var(--muted);
+      font-size: 0.88rem;
+      line-height: 1.4;
+      overflow-wrap: anywhere;
+    }
+
+    .day-tasks {
+      display: grid;
+      gap: 8px;
+      padding: 12px;
+    }
+
+    .compact-task {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: center;
+      padding: 10px;
+      border: 1px solid #e6edf4;
+      border-radius: var(--radius);
+      background: #ffffff;
+    }
+
+    .compact-task.done {
+      background: #f7faf9;
+    }
+
+    .compact-title {
+      font-weight: 780;
+      line-height: 1.35;
+      overflow-wrap: anywhere;
+    }
+
+    .campaign-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .campaign-card,
+    .idea-item {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px;
+      background: #ffffff;
+      min-width: 0;
+    }
+
+    .campaign-card h4,
+    .idea-item h4 {
+      margin: 0 0 7px;
+      font-size: 0.98rem;
+      line-height: 1.3;
+      overflow-wrap: anywhere;
+    }
+
+    .campaign-card p,
+    .idea-item p {
+      color: var(--muted);
+      line-height: 1.45;
+      font-size: 0.86rem;
+      margin: 0 0 12px;
+      overflow-wrap: anywhere;
+    }
+
+    .campaign-footer,
+    .idea-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .campaign-form {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+      grid-template-columns: 1fr 0.8fr 0.8fr auto;
+      align-items: end;
+    }
+
+    .ideas-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+      gap: 16px;
+    }
+
+    .idea-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .idea-form {
+      position: sticky;
+      top: 18px;
+    }
+
+    .insight-rail {
+      display: grid;
+      gap: 16px;
+      min-width: 0;
+    }
+
+    .metric-form {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .rail-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .rail-item {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 10px;
+    }
+
+    .rail-item:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .rail-item strong {
+      display: block;
+      line-height: 1.3;
+      overflow-wrap: anywhere;
+    }
+
+    .rail-item span {
+      color: var(--muted);
+      display: block;
+      font-size: 0.82rem;
+      margin-top: 3px;
+      line-height: 1.35;
+    }
+
+    .channel-bars {
+      display: grid;
+      gap: 10px;
+    }
+
+    .channel-row {
+      display: grid;
+      grid-template-columns: 86px minmax(0, 1fr) 42px;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 0.84rem;
+    }
+
+    .bar {
+      height: 9px;
+      border-radius: 999px;
+      background: #edf2f7;
+      overflow: hidden;
+    }
+
+    .bar span {
+      display: block;
+      height: 100%;
+      width: 0;
+      border-radius: inherit;
+      background: var(--teal);
+    }
+
+    .empty-state {
+      border: 1px dashed var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+      color: var(--muted);
+      text-align: center;
+      line-height: 1.5;
+      background: #fbfcfe;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    @media (max-width: 1180px) {
+      .app-shell {
+        grid-template-columns: 248px minmax(0, 1fr);
+      }
+
+      .kpi-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .dashboard-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .insight-rail {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 920px) {
+      .app-shell {
+        display: block;
+      }
+
+      .sidebar {
+        position: relative;
+        height: auto;
+        border-bottom: 1px solid rgba(216, 238, 238, 0.16);
+      }
+
+      .nav-tabs {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .nav-tab {
+        justify-content: center;
+      }
+
+      .nav-tab span {
+        display: none;
+      }
+
+      .side-panel:last-child {
+        display: none;
+      }
+
+      .main {
+        padding: 18px;
+      }
+
+      .topbar {
+        display: grid;
+      }
+
+      .toolbar {
+        justify-content: flex-start;
+      }
+
+      .insight-rail {
+        grid-template-columns: 1fr;
+      }
+
+      .task-form,
+      .campaign-form,
+      .ideas-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .campaign-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .idea-form {
+        position: static;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .sidebar {
+        padding: 16px;
+      }
+
+      .brand {
+        align-items: flex-start;
+      }
+
+      .main {
+        padding: 14px;
+      }
+
+      .topbar h2 {
+        font-size: 1.38rem;
+      }
+
+      .toolbar {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        width: 100%;
+      }
+
+      .toolbar button,
+      .toolbar label {
+        width: 100%;
+      }
+
+      .kpi-grid,
+      .metric-form,
+      .mini-stats {
+        grid-template-columns: 1fr;
+      }
+
+      .section-header {
+        display: grid;
+        padding: 15px;
+      }
+
+      .panel-body {
+        padding: 15px;
+      }
+
+      .task-row,
+      .compact-task {
+        grid-template-columns: auto minmax(0, 1fr);
+      }
+
+      .task-actions,
+      .compact-task .badge {
+        grid-column: 2;
+        justify-self: start;
+      }
+
+      .day-head {
+        grid-template-columns: 1fr;
+      }
+
+      .day-head .badge {
+        width: fit-content;
+      }
+
+      .channel-row {
+        grid-template-columns: 78px minmax(0, 1fr) 34px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">M</div>
+        <div>
+          <p class="eyebrow">StaffHub</p>
+          <h1>Marketing Command Center</h1>
+        </div>
+      </div>
+
+      <p class="sidebar-copy" id="strategySummary">Loading strategy focus.</p>
+
+      <nav class="nav-tabs" aria-label="Dashboard views">
+        <button class="nav-tab active" type="button" data-view="today">
+          <i data-lucide="layout-dashboard"></i>
+          <span>Today</span>
+        </button>
+        <button class="nav-tab" type="button" data-view="week">
+          <i data-lucide="calendar-days"></i>
+          <span>Week</span>
+        </button>
+        <button class="nav-tab" type="button" data-view="campaigns">
+          <i data-lucide="megaphone"></i>
+          <span>Campaigns</span>
+        </button>
+        <button class="nav-tab" type="button" data-view="ideas">
+          <i data-lucide="lightbulb"></i>
+          <span>Ideas</span>
+        </button>
+      </nav>
+
+      <section class="side-panel" aria-labelledby="rotationLabel">
+        <label class="field-label" id="rotationLabel" for="strategySelect">Strategy rotation</label>
+        <select id="strategySelect"></select>
+      </section>
+
+      <section class="side-panel" aria-labelledby="weeklyProgressLabel">
+        <div class="field-label" id="weeklyProgressLabel">Weekly progress</div>
+        <div class="progress-track" aria-hidden="true">
+          <div class="progress-fill" id="weekProgressBar"></div>
+        </div>
+        <div class="mini-stats">
+          <div class="mini-stat">
+            <span>Done</span>
+            <strong id="weekDone">0</strong>
+          </div>
+          <div class="mini-stat">
+            <span>Open</span>
+            <strong id="weekOpen">0</strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="side-panel">
+        <div class="field-label">Data tools</div>
+        <div class="rail-list">
+          <button class="ghost-button" type="button" id="exportButton">
+            <i data-lucide="download"></i>
+            Export JSON
+          </button>
+          <label class="ghost-button" for="importFile">
+            <i data-lucide="upload"></i>
+            Import JSON
+          </label>
+        </div>
+      </section>
+    </aside>
+
+    <main class="main">
+      <section class="topbar">
+        <div>
+          <p class="eyebrow" id="weekLabel">Loading week</p>
+          <h2 id="todayHeadline">Marketing dashboard</h2>
+          <p id="focusLine">Your daily plan is being prepared.</p>
+        </div>
+        <div class="toolbar" aria-label="Dashboard actions">
+          <button class="primary-button" type="button" id="freshTodayButton">
+            <i data-lucide="sparkles"></i>
+            Fresh tasks
+          </button>
+          <button class="ghost-button" type="button" id="resetTodayButton">
+            <i data-lucide="rotate-ccw"></i>
+            Reset today
+          </button>
+          <button class="danger-button" type="button" id="clearWeekButton">
+            <i data-lucide="trash-2"></i>
+            Clear week
+          </button>
+        </div>
+        <input class="sr-only" type="file" id="importFile" accept="application/json">
+      </section>
+
+      <section class="kpi-grid" id="kpiGrid" aria-label="Marketing performance"></section>
+
+      <div class="dashboard-grid">
+        <div class="view-stack">
+          <section class="work-panel view-section active" data-section="today" aria-labelledby="todaySectionTitle">
+            <div class="section-header">
+              <div>
+                <h3 id="todaySectionTitle">Today operating plan</h3>
+                <p id="todaySubcopy">Prefilled tasks refresh by date and strategy rotation.</p>
+              </div>
+              <span class="badge channel-strategy" id="todayCount">0 tasks</span>
+            </div>
+            <div class="panel-body">
+              <div class="task-list" id="todayTaskList"></div>
+
+              <form class="task-form" id="taskForm">
+                <label class="form-field">
+                  <span>Task</span>
+                  <input type="text" id="taskTitle" placeholder="Add marketing action" required>
+                </label>
+                <label class="form-field">
+                  <span>Channel</span>
+                  <select id="taskChannel">
+                    <option value="CRM">CRM</option>
+                    <option value="Social">Social</option>
+                    <option value="Content">Content</option>
+                    <option value="Ads">Ads</option>
+                    <option value="Email">Email</option>
+                    <option value="SEO">SEO</option>
+                    <option value="Google">Google</option>
+                    <option value="Ops">Ops</option>
+                    <option value="Strategy">Strategy</option>
+                  </select>
+                </label>
+                <label class="form-field">
+                  <span>Priority</span>
+                  <select id="taskPriority">
+                    <option value="High">High</option>
+                    <option value="Medium" selected>Medium</option>
+                    <option value="Low">Low</option>
+                  </select>
+                </label>
+                <button class="primary-button" type="submit">
+                  <i data-lucide="plus"></i>
+                  Add
+                </button>
+              </form>
+            </div>
+          </section>
+
+          <section class="work-panel view-section" data-section="week" aria-labelledby="weekSectionTitle">
+            <div class="section-header">
+              <div>
+                <h3 id="weekSectionTitle">Seven day planner</h3>
+                <p id="weekSubcopy">Daily drivers, sprint work, weekend closeout, and reset blocks.</p>
+              </div>
+              <span class="badge channel-google" id="weekCompletionBadge">0%</span>
+            </div>
+            <div class="panel-body">
+              <div class="week-planner" id="weekPlanner"></div>
+            </div>
+          </section>
+
+          <section class="work-panel view-section" data-section="campaigns" aria-labelledby="campaignSectionTitle">
+            <div class="section-header">
+              <div>
+                <h3 id="campaignSectionTitle">Campaign pipeline</h3>
+                <p>Offer, channel, owner, stage, and next action in one clean lane.</p>
+              </div>
+              <span class="badge channel-ads" id="campaignCount">0 active</span>
+            </div>
+            <div class="panel-body">
+              <div class="campaign-grid" id="campaignGrid"></div>
+
+              <form class="campaign-form" id="campaignForm">
+                <label class="form-field">
+                  <span>Campaign</span>
+                  <input type="text" id="campaignName" placeholder="Weekend direct booking push" required>
+                </label>
+                <label class="form-field">
+                  <span>Stage</span>
+                  <select id="campaignStage">
+                    <option value="Briefing">Briefing</option>
+                    <option value="Creative">Creative</option>
+                    <option value="Live">Live</option>
+                    <option value="Optimize">Optimize</option>
+                    <option value="Review">Review</option>
+                  </select>
+                </label>
+                <label class="form-field">
+                  <span>Budget</span>
+                  <input type="number" id="campaignBudget" min="0" step="500" value="2500">
+                </label>
+                <button class="primary-button" type="submit">
+                  <i data-lucide="plus"></i>
+                  Add
+                </button>
+              </form>
+            </div>
+          </section>
+
+          <section class="work-panel view-section" data-section="ideas" aria-labelledby="ideasSectionTitle">
+            <div class="section-header">
+              <div>
+                <h3 id="ideasSectionTitle">Creative and hook bank</h3>
+                <p>Reusable offers, captions, angles, reels, and email hooks.</p>
+              </div>
+              <span class="badge channel-content" id="ideaCount">0 ideas</span>
+            </div>
+            <div class="panel-body">
+              <div class="ideas-layout">
+                <form class="idea-form" id="ideaForm">
+                  <label class="form-field">
+                    <span>Idea title</span>
+                    <input type="text" id="ideaTitle" placeholder="POV reel: check-in to balcony reveal" required>
+                  </label>
+                  <label class="form-field">
+                    <span>Notes</span>
+                    <textarea id="ideaNotes" placeholder="Hook, asset list, CTA, audience, or offer details"></textarea>
+                  </label>
+                  <label class="form-field">
+                    <span>Format</span>
+                    <select id="ideaFormat">
+                      <option value="Reel">Reel</option>
+                      <option value="Story">Story</option>
+                      <option value="Email">Email</option>
+                      <option value="Ad">Ad</option>
+                      <option value="SEO">SEO</option>
+                      <option value="Partnership">Partnership</option>
+                    </select>
+                  </label>
+                  <button class="primary-button" type="submit">
+                    <i data-lucide="plus"></i>
+                    Save idea
+                  </button>
+                </form>
+                <div class="idea-list" id="ideaList"></div>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <aside class="insight-rail" aria-label="Dashboard controls">
+          <section class="work-panel">
+            <div class="section-header">
+              <div>
+                <h3>Pulse inputs</h3>
+                <p>Update the numbers you actually look at each morning.</p>
+              </div>
+            </div>
+            <div class="panel-body">
+              <form class="metric-form" id="metricForm">
+                <label class="form-field">
+                  <span>Leads today</span>
+                  <input type="number" id="metricLeads" min="0" step="1">
+                </label>
+                <label class="form-field">
+                  <span>Bookings</span>
+                  <input type="number" id="metricBookings" min="0" step="1">
+                </label>
+                <label class="form-field">
+                  <span>Ad spend</span>
+                  <input type="number" id="metricSpend" min="0" step="100">
+                </label>
+                <label class="form-field">
+                  <span>Pipeline INR</span>
+                  <input type="number" id="metricPipeline" min="0" step="1000">
+                </label>
+              </form>
+            </div>
+          </section>
+
+          <section class="work-panel">
+            <div class="section-header">
+              <div>
+                <h3>Focus queue</h3>
+                <p>High priority work still open this week.</p>
+              </div>
+            </div>
+            <div class="panel-body">
+              <div class="rail-list" id="focusQueue"></div>
+            </div>
+          </section>
+
+          <section class="work-panel">
+            <div class="section-header">
+              <div>
+                <h3>Channel mix</h3>
+                <p>Task load by active marketing channel.</p>
+              </div>
+            </div>
+            <div class="panel-body">
+              <div class="channel-bars" id="channelBars"></div>
+            </div>
+          </section>
+        </aside>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const STORAGE_KEY = "staffhub.marketing.command-center.v2";
+    const CHANNEL_CLASS = {
+      Ads: "channel-ads",
+      Content: "channel-content",
+      Social: "channel-social",
+      Email: "channel-email",
+      CRM: "channel-crm",
+      SEO: "channel-seo",
+      Google: "channel-google",
+      Strategy: "channel-strategy",
+      Ops: "channel-ops"
+    };
+
+    const STRATEGIES = [
+      {
+        label: "Direct Booking Conversion",
+        short: "Push high-intent leads toward direct booking and WhatsApp follow-up.",
+        focus: "Direct booking offers, urgency blocks, OTA bypass copy, and lead follow-up speed.",
+        sprintTasks: {
+          1: [
+            ["Build direct booking offer sheet", "Publish one clear rate advantage, inclusion stack, and direct contact CTA.", "Strategy", "High", "11:00"]
+          ],
+          3: [
+            ["Send warm lead follow-up", "Message open inquiries with one clean availability window and a single booking action.", "CRM", "High", "15:30"]
+          ],
+          5: [
+            ["Weekend conversion closeout", "Review lost leads and send a short last-call direct booking prompt.", "CRM", "Medium", "12:00"]
+          ]
+        }
+      },
+      {
+        label: "Social Authority Sprint",
+        short: "Ship more visual proof and build repeatable reels, stories, and comments.",
+        focus: "Short-form video, daily stories, creator angles, and comment-triggered lead capture.",
+        sprintTasks: {
+          2: [
+            ["Edit one proof reel", "Cut a 12 to 18 second reel with first-frame offer text and a direct CTA.", "Content", "High", "13:00"]
+          ],
+          4: [
+            ["Run social proof carousel", "Post 5 frames: view, room, guest note, offer, direct booking CTA.", "Social", "Medium", "16:00"]
+          ],
+          6: [
+            ["Save next week shot list", "Prepare 5 shots that can become reels, stories, and ad creative.", "Content", "Low", "18:00"]
+          ]
+        }
+      },
+      {
+        label: "Local SEO and Maps",
+        short: "Strengthen high-intent discovery through reviews, map content, and search pages.",
+        focus: "Google profile freshness, local keywords, review capture, Q&A, and landing page updates.",
+        sprintTasks: {
+          1: [
+            ["Refresh Google profile media", "Upload 4 current photos with descriptive filenames and location-rich captions.", "Google", "High", "10:30"]
+          ],
+          3: [
+            ["Write one local intent section", "Add a search-friendly block around nearby landmarks, use cases, and booking intent.", "SEO", "Medium", "14:00"]
+          ],
+          5: [
+            ["Review capture round", "Ask recent happy guests for detailed reviews mentioning stay type and location context.", "Google", "High", "11:30"]
+          ]
+        }
+      },
+      {
+        label: "Retention and Database",
+        short: "Extract more revenue from past guests, repeat buyers, and warm lists.",
+        focus: "Email, WhatsApp lists, custom audiences, loyalty offers, referrals, and past-guest winback.",
+        sprintTasks: {
+          2: [
+            ["Segment past guest list", "Tag recent guests, lapsed guests, family travelers, corporate stays, and high-value repeats.", "Email", "High", "12:00"]
+          ],
+          4: [
+            ["Launch VIP rate message", "Send one clean preferred-rate message with deadline, dates, and direct reply CTA.", "CRM", "High", "15:00"]
+          ],
+          6: [
+            ["Prepare retargeting audience", "Export warm leads and past guests for custom audience sync.", "Ads", "Medium", "17:00"]
+          ]
+        }
+      }
+    ];
+
+    const DAILY_DRIVERS = [
+      ["Lead triage and reply block", "Clear WhatsApp, DMs, missed calls, forms, and open booking threads.", "CRM", "High", "09:15"],
+      ["Daily content proof point", "Publish one story or short post that shows a real offer, space, guest proof, or result.", "Social", "Medium", "11:45"],
+      ["Paid media health check", "Check spend, CPL, CTR, comments, and pause anything with weak intent.", "Ads", "High", "14:30"],
+      ["Map and review signal", "Answer questions, respond to reviews, add one photo, or update listing details.", "Google", "Medium", "17:15"]
+    ];
+
+    const DAY_THEMES = {
+      1: ["Monday KPI reset", "Audit last week revenue, lead source quality, and this week's primary offer.", "Strategy", "High", "10:00"],
+      2: ["Creative production block", "Batch one reel, one story frame, and one ad visual from the same asset set.", "Content", "Medium", "12:30"],
+      3: ["Midweek nurture push", "Send a short broadcast to warm leads with one offer and one reply prompt.", "Email", "High", "16:00"],
+      4: ["Landing page and CTA tune-up", "Tighten headline, proof, inquiry CTA, and mobile spacing on the primary offer page.", "SEO", "Medium", "13:30"],
+      5: ["Weekend demand push", "Post urgency creative and follow up with people who asked for dates this week.", "CRM", "High", "15:30"]
+    };
+
+    const SATURDAY_TASKS = [
+      ["Weekend inbox sweep", "Clear Friday and Saturday inbound leads before they go cold.", "CRM", "High", "10:30"],
+      ["Weekly ad review summary", "Record winning audiences, weak creatives, CPL, and next test.", "Ads", "Medium", "12:00"],
+      ["Asset backup and shortlist", "Move the week's best photos, reels, testimonials, and hooks into the idea bank.", "Content", "Low", "16:00"]
+    ];
+
+    const SUNDAY_TASKS = [
+      ["Weekly reset and planning", "Pick the next offer, next audience, next creative block, and one number to improve.", "Strategy", "Medium", "17:00"],
+      ["Light reputation scan", "Check urgent reviews or map questions without opening a full work sprint.", "Google", "Low", "18:00"]
+    ];
+
+    const CONTENT_PROMPTS = [
+      "Before and after result",
+      "Guest question answered",
+      "Price versus value proof",
+      "Behind the scenes setup",
+      "Three reasons to book direct",
+      "Local recommendation angle",
+      "Objection handling clip",
+      "Testimonial overlay",
+      "Weekend availability push",
+      "Owner note or founder voice"
+    ];
+
+    const DEFAULT_CAMPAIGNS = [
+      {
+        id: "camp-direct-weekend",
+        name: "Weekend Direct Booking Push",
+        stage: "Live",
+        channel: "CRM + Ads",
+        budget: 6500,
+        next: "Send direct reply prompt to every warm lead before Friday evening."
+      },
+      {
+        id: "camp-local-seo",
+        name: "Local SEO Map Pack Lift",
+        stage: "Optimize",
+        channel: "Google + SEO",
+        budget: 0,
+        next: "Add fresh photos, answer Q&A, and capture reviews with location detail."
+      },
+      {
+        id: "camp-social-proof",
+        name: "Social Proof Reel Series",
+        stage: "Creative",
+        channel: "Instagram + Facebook",
+        budget: 3000,
+        next: "Cut three proof reels from guest notes, space details, and offer shots."
+      },
+      {
+        id: "camp-winback",
+        name: "Past Guest Winback",
+        stage: "Briefing",
+        channel: "Email + WhatsApp",
+        budget: 1500,
+        next: "Segment past guests and prepare preferred rate copy."
+      }
+    ];
+
+    const DEFAULT_IDEAS = [
+      {
+        id: "idea-balcony-reveal",
+        title: "POV reel: check-in to balcony reveal",
+        notes: "First frame: one direct line about the escape. CTA: message for open dates.",
+        format: "Reel",
+        createdAt: "seed"
+      },
+      {
+        id: "idea-direct-booking",
+        title: "Hook: three reasons to book direct",
+        notes: "Use a clean carousel: better support, easier date handling, direct perks.",
+        format: "Story",
+        createdAt: "seed"
+      },
+      {
+        id: "idea-review-overlay",
+        title: "Guest review overlay on real space shot",
+        notes: "Pair one emotional review with one bright property or product proof image.",
+        format: "Ad",
+        createdAt: "seed"
+      }
+    ];
+
+    const state = loadState();
+
+    function loadState() {
+      const fallback = createDefaultState();
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return fallback;
+        const parsed = JSON.parse(raw);
+        return {
+          ...fallback,
+          ...parsed,
+          metrics: { ...fallback.metrics, ...(parsed.metrics || {}) },
+          tasksByDate: parsed.tasksByDate || {},
+          campaigns: Array.isArray(parsed.campaigns) ? parsed.campaigns : fallback.campaigns,
+          ideas: Array.isArray(parsed.ideas) ? parsed.ideas : fallback.ideas
+        };
+      } catch (error) {
+        console.warn("Could not load dashboard state", error);
+        return fallback;
+      }
+    }
+
+    function createDefaultState() {
+      return {
+        version: 2,
+        strategyIndex: weekNumber(new Date()) % STRATEGIES.length,
+        activeView: "today",
+        tasksByDate: {},
+        campaigns: clone(DEFAULT_CAMPAIGNS),
+        ideas: clone(DEFAULT_IDEAS),
+        metrics: {
+          leads: 8,
+          bookings: 2,
+          spend: 3200,
+          pipeline: 85000
+        }
+      };
+    }
+
+    function saveState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function clone(value) {
+      return JSON.parse(JSON.stringify(value));
+    }
+
+    function today() {
+      const now = new Date();
+      return new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    }
+
+    function addDays(date, days) {
+      const copy = new Date(date);
+      copy.setDate(copy.getDate() + days);
+      return copy;
+    }
+
+    function dateKey(date) {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      return `${year}-${month}-${day}`;
+    }
+
+    function fromDateKey(key) {
+      const [year, month, day] = key.split("-").map(Number);
+      return new Date(year, month - 1, day);
+    }
+
+    function startOfWeek(date) {
+      const copy = new Date(date);
+      const day = copy.getDay();
+      const diff = day === 0 ? -6 : 1 - day;
+      copy.setDate(copy.getDate() + diff);
+      return copy;
+    }
+
+    function weekNumber(date) {
+      const first = new Date(date.getFullYear(), 0, 1);
+      return Math.ceil((((date - first) / 86400000) + first.getDay() + 1) / 7);
+    }
+
+    function humanDate(date) {
+      return date.toLocaleDateString("en-IN", { weekday: "short", month: "short", day: "numeric" });
+    }
+
+    function monthDay(date) {
+      return date.toLocaleDateString("en-IN", { month: "short", day: "numeric" });
+    }
+
+    function money(value) {
+      return `INR ${Number(value || 0).toLocaleString("en-IN")}`;
+    }
+
+    function idFromParts(parts) {
+      return parts.join("|").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+    }
+
+    function promptForDate(date) {
+      const seed = Number(dateKey(date).replace(/-/g, ""));
+      return CONTENT_PROMPTS[seed % CONTENT_PROMPTS.length];
+    }
+
+    function makeTask(date, title, desc, channel, priority, time, type = "generated") {
+      const key = dateKey(date);
+      return {
+        id: idFromParts([key, title, time, type]),
+        title,
+        desc,
+        channel,
+        priority,
+        time,
+        type,
+        done: false
+      };
+    }
+
+    function buildTasksForDate(date) {
+      const dow = date.getDay();
+      const strategy = STRATEGIES[state.strategyIndex];
+      const tasks = [];
+
+      if (dow >= 1 && dow <= 5) {
+        DAILY_DRIVERS.forEach((task) => tasks.push(makeTask(date, ...task)));
+        tasks.push(makeTask(
+          date,
+          `Daily content prompt: ${promptForDate(date)}`,
+          "Turn this angle into one short caption, story, reel, or ad variation.",
+          "Content",
+          "Medium",
+          "12:00"
+        ));
+        if (DAY_THEMES[dow]) tasks.push(makeTask(date, ...DAY_THEMES[dow]));
+      } else if (dow === 6) {
+        SATURDAY_TASKS.forEach((task) => tasks.push(makeTask(date, ...task)));
+      } else {
+        SUNDAY_TASKS.forEach((task) => tasks.push(makeTask(date, ...task)));
+      }
+
+      const sprintTasks = strategy.sprintTasks[dow] || [];
+      sprintTasks.forEach((task) => tasks.push(makeTask(date, ...task, "sprint")));
+
+      return tasks;
+    }
+
+    function ensureTaskDates() {
+      const base = today();
+      for (let offset = -2; offset <= 21; offset += 1) {
+        const date = addDays(base, offset);
+        const key = dateKey(date);
+        if (!Array.isArray(state.tasksByDate[key]) || state.tasksByDate[key].length === 0) {
+          state.tasksByDate[key] = buildTasksForDate(date);
+        }
+      }
+      saveState();
+    }
+
+    function rebuildDate(date, preserveCustom = true) {
+      const key = dateKey(date);
+      const existing = state.tasksByDate[key] || [];
+      const custom = preserveCustom ? existing.filter((task) => task.type === "custom") : [];
+      state.tasksByDate[key] = [...buildTasksForDate(date), ...custom];
+      saveState();
+      render();
+    }
+
+    function rebuildWeek() {
+      weekDates().forEach((date) => {
+        const key = dateKey(date);
+        const existing = state.tasksByDate[key] || [];
+        const custom = existing.filter((task) => task.type === "custom");
+        state.tasksByDate[key] = [...buildTasksForDate(date), ...custom];
+      });
+      saveState();
+      render();
+    }
+
+    function weekDates() {
+      const start = startOfWeek(today());
+      return Array.from({ length: 7 }, (_, index) => addDays(start, index));
+    }
+
+    function currentWeekTasks() {
+      return weekDates().flatMap((date) => state.tasksByDate[dateKey(date)] || []);
+    }
+
+    function tasksForToday() {
+      return state.tasksByDate[dateKey(today())] || [];
+    }
+
+    function refreshIcons() {
+      if (window.lucide && typeof window.lucide.createIcons === "function") {
+        window.lucide.createIcons();
+      }
+    }
+
+    function el(selector, root = document) {
+      return root.querySelector(selector);
+    }
+
+    function clear(node) {
+      node.replaceChildren();
+    }
+
+    function badge(label, className = "") {
+      const span = document.createElement("span");
+      span.className = `badge ${className}`;
+      span.textContent = label;
+      return span;
+    }
+
+    function iconButton(name, label, action, id) {
+      const button = document.createElement("button");
+      button.className = "icon-button";
+      button.type = "button";
+      button.dataset.action = action;
+      if (id) button.dataset.id = id;
+      button.setAttribute("aria-label", label);
+      button.title = label;
+      const icon = document.createElement("i");
+      icon.setAttribute("data-lucide", name);
+      button.append(icon);
+      return button;
+    }
+
+    function channelClass(channel) {
+      return CHANNEL_CLASS[channel] || "channel-strategy";
+    }
+
+    function priorityClass(priority) {
+      return `priority-${String(priority || "medium").toLowerCase()}`;
+    }
+
+    function renderTaskRow(task, date, compact = false) {
+      const row = document.createElement("article");
+      row.className = compact ? "compact-task" : "task-row";
+      if (task.done) row.classList.add("done");
+      row.dataset.taskId = task.id;
+      row.dataset.date = dateKey(date);
+
+      const checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+      checkbox.className = "task-check";
+      checkbox.checked = Boolean(task.done);
+      checkbox.dataset.action = "toggle-task";
+      checkbox.setAttribute("aria-label", `Mark ${task.title} complete`);
+
+      const content = document.createElement("div");
+      const title = document.createElement(compact ? "div" : "p");
+      title.className = compact ? "compact-title" : "task-title";
+      title.textContent = task.title;
+      content.append(title);
+
+      if (!compact) {
+        const desc = document.createElement("p");
+        desc.className = "task-desc";
+        desc.textContent = task.desc;
+        content.append(desc);
+
+        const meta = document.createElement("div");
+        meta.className = "task-meta";
+        meta.append(
+          badge(task.channel, channelClass(task.channel)),
+          badge(task.priority, priorityClass(task.priority)),
+          badge(task.time || "Open")
+        );
+        content.append(meta);
+      }
+
+      const actions = document.createElement("div");
+      actions.className = "task-actions";
+      if (compact) {
+        actions.append(badge(task.channel, channelClass(task.channel)));
+      } else {
+        if (task.type === "custom") {
+          actions.append(iconButton("trash-2", "Delete task", "delete-task", task.id));
+        }
+      }
+
+      row.append(checkbox, content, actions);
+      return row;
+    }
+
+    function renderKpis() {
+      const grid = el("#kpiGrid");
+      clear(grid);
+
+      const todayTasks = tasksForToday();
+      const doneToday = todayTasks.filter((task) => task.done).length;
+      const weekTasks = currentWeekTasks();
+      const weekDone = weekTasks.filter((task) => task.done).length;
+      const openHigh = weekTasks.filter((task) => !task.done && task.priority === "High").length;
+      const conversion = state.metrics.leads > 0 ? Math.round((state.metrics.bookings / state.metrics.leads) * 100) : 0;
+
+      const cards = [
+        ["Today completed", `${doneToday}/${todayTasks.length}`, `${weekDone} finished this week`, "check-circle-2", "teal"],
+        ["Lead conversion", `${conversion}%`, `${state.metrics.bookings} bookings from ${state.metrics.leads} leads`, "activity", "coral"],
+        ["Ad spend", money(state.metrics.spend), `${openHigh} high priority items open`, "wallet-cards", "gold"],
+        ["Pipeline value", money(state.metrics.pipeline), `${state.campaigns.length} active campaigns`, "trending-up", "indigo"]
+      ];
+
+      cards.forEach(([label, value, foot, iconName, tone]) => {
+        const card = document.createElement("article");
+        card.className = "kpi";
+
+        const head = document.createElement("div");
+        head.className = "kpi-head";
+        const labelNode = document.createElement("span");
+        labelNode.textContent = label;
+        const iconWrap = document.createElement("span");
+        iconWrap.className = `kpi-icon ${tone}`;
+        const icon = document.createElement("i");
+        icon.setAttribute("data-lucide", iconName);
+        iconWrap.append(icon);
+        head.append(labelNode, iconWrap);
+
+        const valueNode = document.createElement("div");
+        valueNode.className = "kpi-value";
+        valueNode.textContent = value;
+
+        const footNode = document.createElement("p");
+        footNode.className = "kpi-foot";
+        footNode.textContent = foot;
+
+        card.append(head, valueNode, footNode);
+        grid.append(card);
+      });
+    }
+
+    function renderToday() {
+      const date = today();
+      const tasks = tasksForToday();
+      const done = tasks.filter((task) => task.done).length;
+      const list = el("#todayTaskList");
+      clear(list);
+
+      if (!tasks.length) {
+        const empty = document.createElement("div");
+        empty.className = "empty-state";
+        empty.textContent = "No tasks for today.";
+        list.append(empty);
+      } else {
+        tasks.forEach((task) => list.append(renderTaskRow(task, date)));
+      }
+
+      el("#todayCount").textContent = `${done}/${tasks.length} done`;
+      el("#todaySubcopy").textContent = `${humanDate(date)} - ${STRATEGIES[state.strategyIndex].label}`;
+    }
+
+    function renderWeek() {
+      const planner = el("#weekPlanner");
+      clear(planner);
+
+      weekDates().forEach((date) => {
+        const key = dateKey(date);
+        const tasks = state.tasksByDate[key] || [];
+        const done = tasks.filter((task) => task.done).length;
+
+        const block = document.createElement("section");
+        block.className = "day-block";
+
+        const head = document.createElement("div");
+        head.className = "day-head";
+
+        const dateWrap = document.createElement("div");
+        const name = document.createElement("div");
+        name.className = "day-name";
+        name.textContent = date.toLocaleDateString("en-IN", { weekday: "long" });
+        const dateLine = document.createElement("div");
+        dateLine.className = "day-date";
+        dateLine.textContent = monthDay(date);
+        dateWrap.append(name, dateLine);
+
+        const focus = document.createElement("div");
+        focus.className = "day-focus";
+        focus.textContent = dayFocus(date);
+
+        head.append(dateWrap, focus, badge(`${done}/${tasks.length}`, done === tasks.length ? "channel-crm" : "channel-strategy"));
+
+        const taskWrap = document.createElement("div");
+        taskWrap.className = "day-tasks";
+        tasks.forEach((task) => taskWrap.append(renderTaskRow(task, date, true)));
+
+        block.append(head, taskWrap);
+        planner.append(block);
+      });
+
+      const weekTasks = currentWeekTasks();
+      const pct = weekTasks.length ? Math.round((weekTasks.filter((task) => task.done).length / weekTasks.length) * 100) : 0;
+      el("#weekCompletionBadge").textContent = `${pct}%`;
+    }
+
+    function dayFocus(date) {
+      const dow = date.getDay();
+      if (dow === 0) return "Reset, plan, and protect the next week's strongest offer.";
+      if (dow === 6) return "Light weekend closeout, lead cleanup, and asset capture.";
+      const theme = DAY_THEMES[dow];
+      return theme ? theme[1] : STRATEGIES[state.strategyIndex].focus;
+    }
+
+    function renderCampaigns() {
+      const grid = el("#campaignGrid");
+      clear(grid);
+
+      state.campaigns.forEach((campaign) => {
+        const card = document.createElement("article");
+        card.className = "campaign-card";
+
+        const title = document.createElement("h4");
+        title.textContent = campaign.name;
+
+        const copy = document.createElement("p");
+        copy.textContent = campaign.next;
+
+        const footer = document.createElement("div");
+        footer.className = "campaign-footer";
+        const meta = document.createElement("div");
+        meta.className = "task-meta";
+        meta.append(
+          badge(campaign.stage, "channel-strategy"),
+          badge(campaign.channel || "Marketing", "channel-ads"),
+          badge(money(campaign.budget))
+        );
+        footer.append(meta, iconButton("trash-2", "Delete campaign", "delete-campaign", campaign.id));
+
+        card.append(title, copy, footer);
+        grid.append(card);
+      });
+
+      el("#campaignCount").textContent = `${state.campaigns.length} active`;
+    }
+
+    function renderIdeas() {
+      const list = el("#ideaList");
+      clear(list);
+
+      if (!state.ideas.length) {
+        const empty = document.createElement("div");
+        empty.className = "empty-state";
+        empty.textContent = "No ideas saved.";
+        list.append(empty);
+      } else {
+        state.ideas.forEach((idea) => {
+          const item = document.createElement("article");
+          item.className = "idea-item";
+
+          const title = document.createElement("h4");
+          title.textContent = idea.title;
+          const notes = document.createElement("p");
+          notes.textContent = idea.notes || "No notes yet.";
+
+          const footer = document.createElement("div");
+          footer.className = "idea-footer";
+          footer.append(badge(idea.format || "Idea", channelClass(formatToChannel(idea.format))));
+          footer.append(iconButton("trash-2", "Delete idea", "delete-idea", idea.id));
+
+          item.append(title, notes, footer);
+          list.append(item);
+        });
+      }
+
+      el("#ideaCount").textContent = `${state.ideas.length} ideas`;
+    }
+
+    function formatToChannel(format) {
+      if (format === "Reel" || format === "Story") return "Content";
+      if (format === "Ad") return "Ads";
+      if (format === "Email") return "Email";
+      if (format === "SEO") return "SEO";
+      return "Strategy";
+    }
+
+    function renderRail() {
+      const weekTasks = currentWeekTasks();
+      const done = weekTasks.filter((task) => task.done).length;
+      const open = weekTasks.length - done;
+      const pct = weekTasks.length ? Math.round((done / weekTasks.length) * 100) : 0;
+
+      el("#weekDone").textContent = done;
+      el("#weekOpen").textContent = open;
+      el("#weekProgressBar").style.width = `${pct}%`;
+
+      const focusQueue = el("#focusQueue");
+      clear(focusQueue);
+      const highOpen = weekTasks.filter((task) => !task.done && task.priority === "High").slice(0, 5);
+      if (!highOpen.length) {
+        const empty = document.createElement("div");
+        empty.className = "empty-state";
+        empty.textContent = "No high priority items open.";
+        focusQueue.append(empty);
+      } else {
+        highOpen.forEach((task) => {
+          const item = document.createElement("div");
+          item.className = "rail-item";
+          const copy = document.createElement("div");
+          const title = document.createElement("strong");
+          title.textContent = task.title;
+          const meta = document.createElement("span");
+          meta.textContent = `${task.channel} - ${task.time || "Open"}`;
+          copy.append(title, meta);
+          item.append(copy, badge(task.priority, priorityClass(task.priority)));
+          focusQueue.append(item);
+        });
+      }
+
+      const counts = weekTasks.reduce((acc, task) => {
+        acc[task.channel] = (acc[task.channel] || 0) + 1;
+        return acc;
+      }, {});
+      const max = Math.max(1, ...Object.values(counts));
+      const bars = el("#channelBars");
+      clear(bars);
+
+      Object.entries(counts)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 8)
+        .forEach(([channel, count]) => {
+          const row = document.createElement("div");
+          row.className = "channel-row";
+          const label = document.createElement("span");
+          label.textContent = channel;
+          const bar = document.createElement("div");
+          bar.className = "bar";
+          const fill = document.createElement("span");
+          fill.style.width = `${Math.round((count / max) * 100)}%`;
+          if (channel === "Ads") fill.style.background = "var(--indigo)";
+          if (channel === "Content" || channel === "Social") fill.style.background = "var(--coral)";
+          if (channel === "Email" || channel === "CRM") fill.style.background = "var(--green)";
+          if (channel === "Strategy" || channel === "Ops") fill.style.background = "var(--gold)";
+          bar.append(fill);
+          const value = document.createElement("strong");
+          value.textContent = count;
+          row.append(label, bar, value);
+          bars.append(row);
+        });
+    }
+
+    function renderHeader() {
+      const current = today();
+      const start = startOfWeek(current);
+      const end = addDays(start, 6);
+      const strategy = STRATEGIES[state.strategyIndex];
+
+      el("#weekLabel").textContent = `${monthDay(start)} to ${monthDay(end)}`;
+      el("#todayHeadline").textContent = `${humanDate(current)} marketing dashboard`;
+      el("#focusLine").textContent = strategy.focus;
+      el("#strategySummary").textContent = strategy.short;
+    }
+
+    function renderStrategyOptions() {
+      const select = el("#strategySelect");
+      if (select.children.length === STRATEGIES.length) {
+        select.value = String(state.strategyIndex);
+        return;
+      }
+      clear(select);
+      STRATEGIES.forEach((strategy, index) => {
+        const option = document.createElement("option");
+        option.value = String(index);
+        option.textContent = strategy.label;
+        select.append(option);
+      });
+      select.value = String(state.strategyIndex);
+    }
+
+    function renderMetricsForm() {
+      el("#metricLeads").value = state.metrics.leads;
+      el("#metricBookings").value = state.metrics.bookings;
+      el("#metricSpend").value = state.metrics.spend;
+      el("#metricPipeline").value = state.metrics.pipeline;
+    }
+
+    function renderActiveView() {
+      document.querySelectorAll(".nav-tab").forEach((button) => {
+        button.classList.toggle("active", button.dataset.view === state.activeView);
+      });
+      document.querySelectorAll(".view-section").forEach((section) => {
+        section.classList.toggle("active", section.dataset.section === state.activeView);
+      });
+    }
+
+    function render() {
+      renderStrategyOptions();
+      renderHeader();
+      renderKpis();
+      renderToday();
+      renderWeek();
+      renderCampaigns();
+      renderIdeas();
+      renderRail();
+      renderMetricsForm();
+      renderActiveView();
+      refreshIcons();
+    }
+
+    function findTask(dateKeyValue, taskId) {
+      const tasks = state.tasksByDate[dateKeyValue] || [];
+      return tasks.find((task) => task.id === taskId);
+    }
+
+    function handleDocumentClick(event) {
+      const button = event.target.closest("button[data-action]");
+      if (!button) return;
+      const action = button.dataset.action;
+
+      if (action === "delete-task") {
+        const row = button.closest("[data-date]");
+        const key = row.dataset.date;
+        state.tasksByDate[key] = (state.tasksByDate[key] || []).filter((task) => task.id !== button.dataset.id);
+      }
+
+      if (action === "delete-campaign") {
+        state.campaigns = state.campaigns.filter((campaign) => campaign.id !== button.dataset.id);
+      }
+
+      if (action === "delete-idea") {
+        state.ideas = state.ideas.filter((idea) => idea.id !== button.dataset.id);
+      }
+
+      saveState();
+      render();
+    }
+
+    function handleDocumentChange(event) {
+      if (event.target.dataset.action !== "toggle-task") return;
+      const row = event.target.closest("[data-date]");
+      const task = findTask(row.dataset.date, row.dataset.taskId);
+      if (task) {
+        task.done = event.target.checked;
+        saveState();
+        render();
+      }
+    }
+
+    function bindEvents() {
+      document.addEventListener("click", handleDocumentClick);
+      document.addEventListener("change", handleDocumentChange);
+
+      document.querySelectorAll(".nav-tab").forEach((button) => {
+        button.addEventListener("click", () => {
+          state.activeView = button.dataset.view;
+          saveState();
+          renderActiveView();
+          refreshIcons();
+        });
+      });
+
+      el("#strategySelect").addEventListener("change", (event) => {
+        state.strategyIndex = Number(event.target.value);
+        rebuildWeek();
+      });
+
+      el("#freshTodayButton").addEventListener("click", () => rebuildDate(today()));
+
+      el("#resetTodayButton").addEventListener("click", () => {
+        tasksForToday().forEach((task) => {
+          task.done = false;
+        });
+        saveState();
+        render();
+      });
+
+      el("#clearWeekButton").addEventListener("click", () => {
+        weekDates().forEach((date) => {
+          state.tasksByDate[dateKey(date)] = buildTasksForDate(date);
+        });
+        saveState();
+        render();
+      });
+
+      el("#taskForm").addEventListener("submit", (event) => {
+        event.preventDefault();
+        const date = today();
+        const key = dateKey(date);
+        const title = el("#taskTitle").value.trim();
+        if (!title) return;
+        const task = makeTask(
+          date,
+          title,
+          "Manually added task.",
+          el("#taskChannel").value,
+          el("#taskPriority").value,
+          "Open",
+          "custom"
+        );
+        task.id = `${task.id}-${Date.now()}`;
+        state.tasksByDate[key] = [...(state.tasksByDate[key] || []), task];
+        event.target.reset();
+        el("#taskPriority").value = "Medium";
+        saveState();
+        render();
+      });
+
+      el("#campaignForm").addEventListener("submit", (event) => {
+        event.preventDefault();
+        const name = el("#campaignName").value.trim();
+        if (!name) return;
+        state.campaigns.unshift({
+          id: `camp-${Date.now()}`,
+          name,
+          stage: el("#campaignStage").value,
+          channel: "Marketing",
+          budget: Number(el("#campaignBudget").value || 0),
+          next: "Define next action, owner, and launch checkpoint."
+        });
+        event.target.reset();
+        el("#campaignBudget").value = 2500;
+        saveState();
+        render();
+      });
+
+      el("#ideaForm").addEventListener("submit", (event) => {
+        event.preventDefault();
+        const title = el("#ideaTitle").value.trim();
+        if (!title) return;
+        state.ideas.unshift({
+          id: `idea-${Date.now()}`,
+          title,
+          notes: el("#ideaNotes").value.trim(),
+          format: el("#ideaFormat").value,
+          createdAt: new Date().toISOString()
+        });
+        event.target.reset();
+        saveState();
+        render();
+      });
+
+      el("#metricForm").addEventListener("input", () => {
+        state.metrics.leads = Number(el("#metricLeads").value || 0);
+        state.metrics.bookings = Number(el("#metricBookings").value || 0);
+        state.metrics.spend = Number(el("#metricSpend").value || 0);
+        state.metrics.pipeline = Number(el("#metricPipeline").value || 0);
+        saveState();
+        renderKpis();
+      });
+
+      el("#exportButton").addEventListener("click", exportDashboard);
+      el("#importFile").addEventListener("change", importDashboard);
+    }
+
+    function exportDashboard() {
+      const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = `marketing-dashboard-${dateKey(today())}.json`;
+      document.body.append(link);
+      link.click();
+      URL.revokeObjectURL(link.href);
+      link.remove();
+    }
+
+    function importDashboard(event) {
+      const file = event.target.files && event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const imported = JSON.parse(reader.result);
+          Object.assign(state, createDefaultState(), imported);
+          saveState();
+          ensureTaskDates();
+          render();
+        } catch (error) {
+          alert("This JSON file could not be imported.");
+        }
+        event.target.value = "";
+      };
+      reader.readAsText(file);
+    }
+
+    ensureTaskDates();
+    bindEvents();
+    render();
+  </script>
+</body>
+</html>

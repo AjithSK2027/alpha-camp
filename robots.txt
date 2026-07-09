@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://campalpha.co.in/sitemap.xml
